@@ -7,9 +7,12 @@ import { AuditScreen } from './screens/AuditScreen'
 import { IncidentDetailScreen } from './screens/IncidentDetailScreen'
 import { OverviewScreen } from './screens/OverviewScreen'
 import { PhishingScreen } from './screens/PhishingScreen'
+import { PostureScreen } from './screens/PostureScreen'
+
+type ActiveTab = 'Overview' | 'Phishing' | 'Audit' | 'Posture'
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'Overview' | 'Phishing' | 'Audit'>('Overview')
+  const [activeTab, setActiveTab] = useState<ActiveTab>('Overview')
   const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(null)
 
   // Roles & Language state
@@ -96,12 +99,13 @@ function App() {
               { id: 'Overview', icon: '▦', label: 'SOC Overview' },
               { id: 'Phishing', icon: '⌕', label: 'Check Message' },
               { id: 'Audit', icon: '☷', label: 'Audit Trail' },
+              { id: 'Posture', icon: '⛨', label: 'Posture' },
             ].map((item) => (
               <button
                 key={item.id}
                 onClick={() => {
                   setSelectedIncidentId(null)
-                  setActiveTab(item.id as 'Overview' | 'Phishing' | 'Audit')
+                  setActiveTab(item.id as ActiveTab)
                 }}
                 style={{
                   display: 'flex',
@@ -172,6 +176,8 @@ function App() {
             />
           ) : activeTab === 'Phishing' ? (
             <PhishingScreen />
+          ) : activeTab === 'Posture' ? (
+            <PostureScreen />
           ) : (
             <AuditScreen />
           )}

@@ -328,6 +328,17 @@ class ApiClient {
     if (!res.ok) throw new Error('Failed to fetch tool state')
     return await res.json()
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getPosture(): Promise<any> {
+    try {
+      const res = await fetch('/api/posture')
+      if (!res.ok) throw new Error('Posture check failed')
+      return await res.json()
+    } catch {
+      return null
+    }
+  }
 }
 
 export const api = new ApiClient()

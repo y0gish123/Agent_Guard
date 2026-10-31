@@ -445,6 +445,153 @@
         }
       }
     },
+    "/api/incidents/identity/confirm": {
+      "post": {
+        "tags": [
+          "incidents"
+        ],
+        "summary": "Confirm Identity",
+        "description": "Approver confirms 'Was this you?' to add an IP/device to user's learned baseline.",
+        "operationId": "confirm_identity_api_incidents_identity_confirm_post",
+        "parameters": [
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          },
+          {
+            "name": "x-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "analyst-lead",
+              "title": "X-User"
+            }
+          },
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "approver",
+              "title": "X-Role"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmIdentityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Confirm Identity Api Incidents Identity Confirm Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/identity/confirm": {
+      "post": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Global Confirm Identity",
+        "operationId": "global_confirm_identity_api_identity_confirm_post",
+        "parameters": [
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          },
+          {
+            "name": "x-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "analyst-lead",
+              "title": "X-User"
+            }
+          },
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "approver",
+              "title": "X-Role"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmIdentityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/phishing/check": {
       "post": {
         "tags": [
@@ -1092,6 +1239,30 @@
           }
         }
       }
+    },
+    "/api/posture": {
+      "get": {
+        "tags": [
+          "posture"
+        ],
+        "summary": "Get Posture",
+        "description": "Return security posture assessment.\n\nChecks: HTTPS/HSTS, cookie flags, security headers, MFA coverage,\nRDP exposure, backup health, outdated software (CISA KEV match).\n\nAll checks target ONLY the configured localhost SITE_URL.\nSIMULATION: posture checks inspect only this machine and localhost site.",
+        "operationId": "get_posture_api_posture_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get Posture Api Posture Get"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1183,6 +1354,35 @@
           "likely"
         ],
         "title": "Confidence"
+      },
+      "ConfirmIdentityRequest": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "src_ip": {
+            "type": "string",
+            "title": "Src Ip"
+          },
+          "device": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "src_ip"
+        ],
+        "title": "ConfirmIdentityRequest"
       },
       "Event": {
         "properties": {
