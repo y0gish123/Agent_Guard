@@ -1,0 +1,7 @@
+{
+  "action_type": "lock_account",
+  "target_id": "priya.rec",
+  "requested_by": "analyst-1",
+  "proposed_by": "human"
+}
+

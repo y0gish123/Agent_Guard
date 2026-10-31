@@ -1,0 +1,18 @@
+[
+  {
+    "event_id": "evt-101",
+    "timestamp": "2026-10-29T10:00:00Z",
+    "source": "replay",
+    "host_id": "clinic-pc-01",
+    "user_id": "priya.rec",
+    "event_type": "authentication_failure",
+    "severity": "medium",
+    "raw_event_ref": "raw-log-101",
+    "attributes": {
+      "src_ip": "203.0.113.50",
+      "method": "rdp"
+    },
+    "schema_version": "1.0"
+  }
+]
+

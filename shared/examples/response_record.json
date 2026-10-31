@@ -1,0 +1,16 @@
+{
+  "response_id": "resp-001",
+  "incident_id": "inc-3f9a1c20",
+  "action_type": "lock_account",
+  "target_id": "priya.rec",
+  "requested_by": "analyst-1",
+  "proposed_by": "human",
+  "policy_decision": "REVIEW",
+  "reason_code": "APPROVAL_REQUIRED",
+  "plain_reason": "This action is allowed for this incident but a person must approve it first.",
+  "approval_state": "pending",
+  "execution_status": "not_started",
+  "audit_event_id": 1,
+  "created_at": "2026-10-29T10:20:00Z"
+}
+

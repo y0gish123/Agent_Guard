@@ -1,0 +1,32 @@
+{
+  "accounts": {
+    "priya.rec": {
+      "locked": false,
+      "sessions_revoked": false
+    },
+    "ceo": {
+      "locked": false,
+      "sessions_revoked": false
+    },
+    "front.desk": {
+      "locked": false,
+      "sessions_revoked": false
+    },
+    "svc-backup": {
+      "locked": false,
+      "sessions_revoked": false
+    }
+  },
+  "hosts": {
+    "clinic-pc-01": {
+      "isolated": false
+    },
+    "clinic-pc-02": {
+      "isolated": false
+    },
+    "db-server-01": {
+      "isolated": false
+    }
+  }
+}
+

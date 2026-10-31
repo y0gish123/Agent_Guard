@@ -1,0 +1,29 @@
+{
+  "incident_id": "inc-3f9a1c20",
+  "lang": "en",
+  "summary": "Suspicious sign-in and admin change for priya.rec. Repeated failed logins followed by privilege escalation",
+  "observed_facts": [
+    {
+      "text": "authentication_failure at 2026-10-29T10:00:00Z for priya.rec",
+      "evidence_event_ids": ["evt-101"]
+    },
+    {
+      "text": "authentication_success at 2026-10-29T10:05:00Z for priya.rec",
+      "evidence_event_ids": ["evt-110"]
+    }
+  ],
+  "interpretation": "Needs review: this is an automatic summary of recorded events.",
+  "potential_impact": [
+    "Potential unauthorized access to host clinic-pc-01",
+    "Potential privilege escalation to Administrator"
+  ],
+  "confidence_label": "likely",
+  "recommended_next_steps": [
+    "Validate authorization with account owner",
+    "Review active remote sessions on clinic-pc-01"
+  ],
+  "recommended_actions": [],
+  "generated_by": "fallback",
+  "mode": "guarded"
+}
+

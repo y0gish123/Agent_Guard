@@ -1,0 +1,6 @@
+{
+  "code": "TARGET_OUT_OF_SCOPE",
+  "plain_message": "This account or computer is not part of this incident, so the action was refused.",
+  "detail_id": "err-9b2f4c"
+}
+

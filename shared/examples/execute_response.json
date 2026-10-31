@@ -1,0 +1,14 @@
+{
+  "response_id": "resp-001",
+  "execution_status": "succeeded",
+  "reason_code": "EXECUTED_OK",
+  "plain_reason": "The action was carried out in the simulation.",
+  "audit_event_id": 4,
+  "tool_result": {
+    "ok": true,
+    "action": "lock_account",
+    "target": "priya.rec",
+    "locked": true
+  }
+}
+

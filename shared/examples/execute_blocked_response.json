@@ -1,0 +1,9 @@
+{
+  "response_id": "resp-002",
+  "execution_status": "blocked",
+  "reason_code": "TARGET_OUT_OF_SCOPE",
+  "plain_reason": "This account or computer is not part of this incident, so the action was refused.",
+  "audit_event_id": 5,
+  "tool_result": null
+}
+

@@ -1,0 +1,13 @@
+{
+  "verdict": "amber",
+  "score": 30,
+  "reasons": [
+    {
+      "code": "R_STUB",
+      "text": "Default heuristic evaluation flags external urgent credential request.",
+      "snippet": "URGENT: Password expired."
+    }
+  ],
+  "event_id": "evt-1001"
+}
+

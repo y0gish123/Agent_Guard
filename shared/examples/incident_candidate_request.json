@@ -1,0 +1,22 @@
+[
+  {
+    "incident_id": "inc-3f9a1c20",
+    "title": "Suspicious sign-in and admin change for priya.rec",
+    "category": "multi_stage",
+    "severity": "high",
+    "status": "open",
+    "first_seen": "2026-10-29T10:00:00Z",
+    "last_seen": "2026-10-29T10:15:00Z",
+    "affected_hosts": ["clinic-pc-01"],
+    "affected_users": ["priya.rec"],
+    "affected_ips": ["203.0.113.50"],
+    "evidence_event_ids": ["evt-101", "evt-110", "evt-111", "evt-112"],
+    "detection_reason": "Repeated failed logins followed by privilege escalation",
+    "link_rule": "LINK_SAME_USER_30M",
+    "confidence_label": "likely",
+    "schema_version": "1.0",
+    "created_at": "2026-10-29T10:15:00Z",
+    "updated_at": "2026-10-29T10:15:00Z"
+  }
+]
+
