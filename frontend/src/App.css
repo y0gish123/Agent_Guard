@@ -1,0 +1,65 @@
+/* AgentGuard - Global layout and dashboard styling */
+
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #e8edf8;
+  background: #0b1020;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #0b1020;
+}
+
+body {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: #0b1020;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+button,
+textarea,
+input {
+  font: inherit;
+}
+
+button {
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+textarea:focus,
+input:focus {
+  outline: 2px solid #6679ef;
+  outline-offset: 2px;
+}
+
+::selection {
+  background: #6679ef;
+  color: #ffffff;
+}

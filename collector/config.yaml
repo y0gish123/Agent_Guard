@@ -1,0 +1,16 @@
+backend_url: "http://localhost:8000"
+batch_interval_seconds: 1.0
+batch_size: 50
+offset_file: "collector/offsets.json"
+
+logs:
+  auth:
+    path: "site_logs/auth.log"
+    type: "auth"
+  access:
+    path: "site_logs/access.log"
+    type: "access"
+  data:
+    path: "site_logs/data.log"
+    type: "data"
+

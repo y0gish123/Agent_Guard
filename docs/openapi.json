@@ -1,0 +1,2040 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AgentGuard AI SOC",
+    "description": "Verified Policy Gateway and AI SOC Backend",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health Check",
+        "operationId": "health_check_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ingest/events": {
+      "post": {
+        "tags": [
+          "ingest"
+        ],
+        "summary": "Ingest Events",
+        "operationId": "ingest_events_api_ingest_events_post",
+        "parameters": [
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Event"
+                },
+                "title": "Events"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "integer"
+                  },
+                  "title": "Response Ingest Events Api Ingest Events Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ingest/incident-candidates": {
+      "post": {
+        "tags": [
+          "ingest"
+        ],
+        "summary": "Ingest Incident Candidates",
+        "operationId": "ingest_incident_candidates_api_ingest_incident_candidates_post",
+        "parameters": [
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Incident"
+                },
+                "title": "Candidates"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "integer"
+                  },
+                  "title": "Response Ingest Incident Candidates Api Ingest Incident Candidates Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/incidents": {
+      "get": {
+        "tags": [
+          "incidents"
+        ],
+        "summary": "List Incidents",
+        "operationId": "list_incidents_api_incidents_get",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Severity"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response List Incidents Api Incidents Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/incidents/{id}": {
+      "get": {
+        "tags": [
+          "incidents"
+        ],
+        "summary": "Get Incident",
+        "operationId": "get_incident_api_incidents__id__get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Incident Api Incidents  Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/incidents/{id}/explanation": {
+      "post": {
+        "tags": [
+          "incidents"
+        ],
+        "summary": "Get Incident Explanation",
+        "operationId": "get_incident_explanation_api_incidents__id__explanation_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LangBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Explanation"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/incidents/{id}/response-preview": {
+      "post": {
+        "tags": [
+          "incidents"
+        ],
+        "summary": "Preview Response",
+        "operationId": "preview_response_api_incidents__id__response_preview_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          },
+          {
+            "name": "X-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "anonymous",
+              "title": "X-User"
+            }
+          },
+          {
+            "name": "X-Role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "staff",
+              "title": "X-Role"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/phishing/check": {
+      "post": {
+        "tags": [
+          "phishing"
+        ],
+        "summary": "Check Phishing",
+        "operationId": "check_phishing_api_phishing_check_post",
+        "parameters": [
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhishingCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhishingCheckResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/responses/{id}/approve": {
+      "post": {
+        "tags": [
+          "responses"
+        ],
+        "summary": "Approve Response",
+        "operationId": "approve_response_api_responses__id__approve_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          },
+          {
+            "name": "X-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "anonymous",
+              "title": "X-User"
+            }
+          },
+          {
+            "name": "X-Role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "staff",
+              "title": "X-Role"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/responses/{id}/execute": {
+      "post": {
+        "tags": [
+          "responses"
+        ],
+        "summary": "Execute Response",
+        "operationId": "execute_response_api_responses__id__execute_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          },
+          {
+            "name": "X-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "anonymous",
+              "title": "X-User"
+            }
+          },
+          {
+            "name": "X-Role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "staff",
+              "title": "X-Role"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Execute Response Api Responses  Id  Execute Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/audit": {
+      "get": {
+        "tags": [
+          "audit"
+        ],
+        "summary": "List Audit Events",
+        "operationId": "list_audit_events_api_audit_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response List Audit Events Api Audit Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/audit/verify": {
+      "post": {
+        "tags": [
+          "audit"
+        ],
+        "summary": "Verify Audit Chain",
+        "operationId": "verify_audit_chain_api_audit_verify_post",
+        "parameters": [
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Verify Audit Chain Api Audit Verify Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "audit"
+        ],
+        "summary": "Verify Audit Chain",
+        "operationId": "verify_audit_chain_api_audit_verify_get",
+        "parameters": [
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Verify Audit Chain Api Audit Verify Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/funnel": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Get Funnel",
+        "operationId": "get_funnel_api_funnel_get",
+        "parameters": [
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FunnelCounts"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/meta": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Get Meta",
+        "operationId": "get_meta_api_meta_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Meta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/demo/naive-execute": {
+      "post": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Naive Execute",
+        "operationId": "naive_execute_api_demo_naive_execute_post",
+        "parameters": [
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          },
+          {
+            "name": "X-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "anonymous",
+              "title": "X-User"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NaiveExecuteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Naive Execute Api Demo Naive Execute Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/demo/reset": {
+      "post": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Reset Backend And Tool",
+        "operationId": "reset_backend_and_tool_api_demo_reset_post",
+        "parameters": [
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Reset Backend And Tool Api Demo Reset Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/demo/seed": {
+      "post": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Seed Demo Scenario",
+        "description": "Load built-in demonstration data through the standard upsert paths.",
+        "operationId": "seed_demo_scenario_api_demo_seed_post",
+        "parameters": [
+          {
+            "name": "scenario",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "account",
+                "filebursts",
+                "poisoned",
+                "all"
+              ],
+              "type": "string",
+              "default": "all",
+              "title": "Scenario"
+            }
+          },
+          {
+            "name": "db_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sqlite:///./agentguard.db",
+              "title": "Db Url"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Seed Demo Scenario Api Demo Seed Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/demo/tool-state": {
+      "get": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Get Mock Tool State",
+        "description": "Read-only proxy to mock tool GET /tool/state so frontend never communicates with tool directly.",
+        "operationId": "get_mock_tool_state_api_demo_tool_state_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get Mock Tool State Api Demo Tool State Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stream": {
+      "get": {
+        "tags": [
+          "stream"
+        ],
+        "summary": "Stream Events",
+        "description": "SSE endpoint. Connect with EventSource('/api/stream') in the browser.\n\nReturns live update events. Falls back to 5s polling if EventSource is\nunavailable (see frontend useLiveUpdates hook).",
+        "operationId": "stream_events_api_stream_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActionProposal": {
+        "properties": {
+          "action_type": {
+            "$ref": "#/components/schemas/ActionType"
+          },
+          "target_id": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Target Id"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action_type",
+          "target_id",
+          "reason"
+        ],
+        "title": "ActionProposal"
+      },
+      "ActionType": {
+        "type": "string",
+        "enum": [
+          "lock_account",
+          "revoke_session",
+          "isolate_host",
+          "block_ip"
+        ],
+        "title": "ActionType"
+      },
+      "ApprovalState": {
+        "type": "string",
+        "enum": [
+          "not_required",
+          "pending",
+          "approved",
+          "rejected"
+        ],
+        "title": "ApprovalState"
+      },
+      "ApproveRequest": {
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "reject"
+            ],
+            "title": "Decision"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision",
+          "reason"
+        ],
+        "title": "ApproveRequest"
+      },
+      "Category": {
+        "type": "string",
+        "enum": [
+          "phishing_attempt",
+          "account_takeover",
+          "ransomware_like_activity",
+          "multi_stage",
+          "web_attack",
+          "data_exfiltration_suspected"
+        ],
+        "title": "Category"
+      },
+      "Confidence": {
+        "type": "string",
+        "enum": [
+          "low",
+          "needs_review",
+          "likely"
+        ],
+        "title": "Confidence"
+      },
+      "Event": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^evt-[A-Za-z0-9_\\-]+$",
+            "title": "Event Id"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "source": {
+            "$ref": "#/components/schemas/Source"
+          },
+          "host_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Host Id"
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "event_type": {
+            "$ref": "#/components/schemas/EventType"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity"
+          },
+          "raw_event_ref": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Raw Event Ref"
+          },
+          "attributes": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Attributes"
+          },
+          "trace_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trace Id"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          },
+          "span_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Span Id"
+          },
+          "user_agent": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Agent"
+          },
+          "session_id_hash": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id Hash"
+          },
+          "ingested_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ingested At"
+          },
+          "source_event_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Event Id"
+          },
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "timestamp",
+          "source",
+          "event_type",
+          "severity",
+          "raw_event_ref"
+        ],
+        "title": "Event"
+      },
+      "EventType": {
+        "type": "string",
+        "enum": [
+          "authentication_failure",
+          "authentication_success",
+          "privilege_change",
+          "scheduled_task_created",
+          "process_start",
+          "backup_tampering",
+          "file_change_burst",
+          "file_created",
+          "phishing_check",
+          "web_request",
+          "data_access",
+          "dns_query",
+          "network_connection"
+        ],
+        "title": "EventType"
+      },
+      "ExecutionStatus": {
+        "type": "string",
+        "enum": [
+          "not_started",
+          "succeeded",
+          "rejected_by_tool",
+          "blocked",
+          "failed"
+        ],
+        "title": "ExecutionStatus"
+      },
+      "Explanation": {
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id"
+          },
+          "lang": {
+            "type": "string",
+            "enum": [
+              "en",
+              "hi",
+              "kn"
+            ],
+            "title": "Lang"
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Summary"
+          },
+          "observed_facts": {
+            "items": {
+              "$ref": "#/components/schemas/ObservedFact"
+            },
+            "type": "array",
+            "title": "Observed Facts"
+          },
+          "interpretation": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Interpretation"
+          },
+          "potential_impact": {
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "type": "array",
+            "title": "Potential Impact"
+          },
+          "confidence_label": {
+            "$ref": "#/components/schemas/Confidence"
+          },
+          "recommended_next_steps": {
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "type": "array",
+            "title": "Recommended Next Steps"
+          },
+          "recommended_actions": {
+            "items": {
+              "$ref": "#/components/schemas/ActionProposal"
+            },
+            "type": "array",
+            "title": "Recommended Actions"
+          },
+          "generated_by": {
+            "type": "string",
+            "enum": [
+              "llm",
+              "cache",
+              "fallback"
+            ],
+            "title": "Generated By"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "guarded",
+              "naive"
+            ],
+            "title": "Mode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "incident_id",
+          "lang",
+          "summary",
+          "interpretation",
+          "confidence_label",
+          "generated_by",
+          "mode"
+        ],
+        "title": "Explanation"
+      },
+      "FunnelCounts": {
+        "properties": {
+          "raw_events": {
+            "type": "integer",
+            "title": "Raw Events"
+          },
+          "alerts": {
+            "type": "integer",
+            "title": "Alerts"
+          },
+          "incidents": {
+            "type": "integer",
+            "title": "Incidents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "raw_events",
+          "alerts",
+          "incidents"
+        ],
+        "title": "FunnelCounts"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Incident": {
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^inc-[0-9a-fA-F]{8}$",
+            "title": "Incident Id"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Title"
+          },
+          "category": {
+            "$ref": "#/components/schemas/Category"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity"
+          },
+          "status": {
+            "$ref": "#/components/schemas/IncidentStatus"
+          },
+          "first_seen": {
+            "type": "string",
+            "format": "date-time",
+            "title": "First Seen"
+          },
+          "last_seen": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Seen"
+          },
+          "affected_hosts": {
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "type": "array",
+            "title": "Affected Hosts"
+          },
+          "affected_users": {
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "type": "array",
+            "title": "Affected Users"
+          },
+          "affected_ips": {
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "type": "array",
+            "title": "Affected Ips"
+          },
+          "evidence_event_ids": {
+            "items": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "type": "array",
+            "title": "Evidence Event Ids"
+          },
+          "detection_reason": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Detection Reason"
+          },
+          "link_rule": {
+            "$ref": "#/components/schemas/LinkRule"
+          },
+          "confidence_label": {
+            "$ref": "#/components/schemas/Confidence"
+          },
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "incident_id",
+          "title",
+          "category",
+          "severity",
+          "status",
+          "first_seen",
+          "last_seen",
+          "detection_reason",
+          "link_rule",
+          "confidence_label",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "Incident"
+      },
+      "IncidentStatus": {
+        "type": "string",
+        "enum": [
+          "open",
+          "contained",
+          "closed"
+        ],
+        "title": "IncidentStatus"
+      },
+      "LangBody": {
+        "properties": {
+          "lang": {
+            "type": "string",
+            "enum": [
+              "en",
+              "hi",
+              "kn"
+            ],
+            "title": "Lang",
+            "default": "en"
+          }
+        },
+        "type": "object",
+        "title": "LangBody"
+      },
+      "LinkRule": {
+        "type": "string",
+        "enum": [
+          "LINK_SAME_USER_30M",
+          "LINK_SAME_HOST_30M",
+          "NONE"
+        ],
+        "title": "LinkRule"
+      },
+      "Meta": {
+        "properties": {
+          "demo_mode": {
+            "type": "string",
+            "title": "Demo Mode"
+          },
+          "simulation": {
+            "type": "boolean",
+            "title": "Simulation",
+            "default": true
+          },
+          "schema_version": {
+            "type": "string",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "ai_available": {
+            "type": "boolean",
+            "title": "Ai Available"
+          }
+        },
+        "type": "object",
+        "required": [
+          "demo_mode",
+          "ai_available"
+        ],
+        "title": "Meta"
+      },
+      "NaiveExecuteRequest": {
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id"
+          },
+          "action_type": {
+            "$ref": "#/components/schemas/ActionType"
+          },
+          "target_id": {
+            "type": "string",
+            "title": "Target Id"
+          },
+          "proposed_by": {
+            "$ref": "#/components/schemas/ProposedBy",
+            "default": "human"
+          }
+        },
+        "type": "object",
+        "required": [
+          "incident_id",
+          "action_type",
+          "target_id"
+        ],
+        "title": "NaiveExecuteRequest"
+      },
+      "ObservedFact": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Text"
+          },
+          "evidence_event_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence Event Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "ObservedFact"
+      },
+      "PhishingCheckRequest": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "User Id"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 100000,
+            "title": "Text"
+          },
+          "sender": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sender"
+          },
+          "reply_to": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply To"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "text"
+        ],
+        "title": "PhishingCheckRequest"
+      },
+      "PhishingCheckResponse": {
+        "properties": {
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "red",
+              "amber",
+              "green"
+            ],
+            "title": "Verdict"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "reasons": {
+            "items": {
+              "$ref": "#/components/schemas/PhishingReasonItem"
+            },
+            "type": "array",
+            "title": "Reasons"
+          },
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "verdict",
+          "score",
+          "event_id"
+        ],
+        "title": "PhishingCheckResponse"
+      },
+      "PhishingReasonItem": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "snippet": {
+            "type": "string",
+            "title": "Snippet"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "text",
+          "snippet"
+        ],
+        "title": "PhishingReasonItem"
+      },
+      "PolicyDecision": {
+        "type": "string",
+        "enum": [
+          "ALLOW",
+          "REVIEW",
+          "BLOCK"
+        ],
+        "title": "PolicyDecision"
+      },
+      "PreviewRequest": {
+        "properties": {
+          "action_type": {
+            "$ref": "#/components/schemas/ActionType"
+          },
+          "target_id": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Target Id"
+          },
+          "requested_by": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Requested By"
+          },
+          "proposed_by": {
+            "$ref": "#/components/schemas/ProposedBy"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action_type",
+          "target_id",
+          "requested_by",
+          "proposed_by"
+        ],
+        "title": "PreviewRequest"
+      },
+      "ProposedBy": {
+        "type": "string",
+        "enum": [
+          "human",
+          "ai"
+        ],
+        "title": "ProposedBy"
+      },
+      "ReasonCode": {
+        "type": "string",
+        "enum": [
+          "APPROVAL_REQUIRED",
+          "TARGET_OUT_OF_SCOPE",
+          "ACTION_NOT_ALLOWED_FOR_CATEGORY",
+          "INCIDENT_NOT_OPEN",
+          "ROLE_NOT_PERMITTED",
+          "APPROVAL_NOT_RECORDED",
+          "EXECUTED_OK",
+          "TOKEN_MISSING",
+          "TOKEN_BAD_SIGNATURE",
+          "TOKEN_EXPIRED",
+          "TOKEN_REPLAYED",
+          "TOKEN_SCOPE_MISMATCH",
+          "TOOL_UNAVAILABLE"
+        ],
+        "title": "ReasonCode"
+      },
+      "ResponseRecord": {
+        "properties": {
+          "response_id": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^resp-[A-Za-z0-9_\\-]+$",
+            "title": "Response Id"
+          },
+          "incident_id": {
+            "type": "string",
+            "maxLength": 64,
+            "title": "Incident Id"
+          },
+          "action_type": {
+            "$ref": "#/components/schemas/ActionType"
+          },
+          "target_id": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Target Id"
+          },
+          "requested_by": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Requested By"
+          },
+          "proposed_by": {
+            "$ref": "#/components/schemas/ProposedBy"
+          },
+          "policy_decision": {
+            "$ref": "#/components/schemas/PolicyDecision"
+          },
+          "reason_code": {
+            "$ref": "#/components/schemas/ReasonCode"
+          },
+          "plain_reason": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Plain Reason"
+          },
+          "approval_state": {
+            "$ref": "#/components/schemas/ApprovalState"
+          },
+          "execution_status": {
+            "$ref": "#/components/schemas/ExecutionStatus"
+          },
+          "audit_event_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audit Event Id"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "response_id",
+          "incident_id",
+          "action_type",
+          "target_id",
+          "requested_by",
+          "proposed_by",
+          "policy_decision",
+          "reason_code",
+          "plain_reason",
+          "approval_state",
+          "execution_status",
+          "created_at"
+        ],
+        "title": "ResponseRecord"
+      },
+      "Severity": {
+        "type": "string",
+        "enum": [
+          "low",
+          "medium",
+          "high",
+          "critical"
+        ],
+        "title": "Severity"
+      },
+      "Source": {
+        "type": "string",
+        "enum": [
+          "replay",
+          "wazuh",
+          "collector",
+          "phishing_check",
+          "simulator"
+        ],
+        "title": "Source"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
