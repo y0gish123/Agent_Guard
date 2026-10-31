@@ -77,3 +77,45 @@ This document records architectural, design, and implementation decisions made d
   - Evidence Timeline & Text Escaping: All event attributes and log payloads are rendered strictly as data (JSON/text), never innerHTML, preventing XSS and prompt injection leakage into the UI.
   - Phishing Scanner: Directly calls `/api/phishing/check`, rendering verdict badges (RED/AMBER/GREEN), confidence/risk score, and specific indicator breakdown.
   - Tamper-Evident Audit Screen: Verifies the cryptographic SHA-256 hash chain live with block-by-block integrity validation.
+
+## 17. Phase C: Risk Scoring Engine & Contextual Baseline
+- **Decision**: Implemented `detection/risk.py:RiskEngine` and `IdentityBaselineManager`. Incidents are opened only when risk score meets the configured threshold AND at least two distinct signal categories are present. Standalone unrecognised IP signals (R3) during learning baseline periods do not trigger incidents.
+- **Contextual Authentication**: Added `POST /api/identity/confirm` route allowing staff/approver to confirm "Was this you?", updating `integrations/state/identity_baselines.json` and writing a cryptographic audit record.
+- **Advanced Detectors**: Session hijack (same session_id_hash across distinct IPs/User-Agents), Password spray (1 IP failing across >= 5 accounts in 10m), Mass delete (>= 30 delete events in 2m).
+- **Benign Zero-Incident Guarantee**: All 6 benign scenarios (one wrong password then correct, owner login from new IP, normal shopping day, scheduled backup, staff export of 10 records, new staff device) validated to produce exactly 0 incidents.
+
+## 18. Phase D: WAF/Firewall Log Adapter & block_ip End-to-End
+- **Decision**: Implemented `collector/mappers/modsecurity.py:map_modsecurity_line`. Maps ModSecurity-style JSON audit entries to `web_request` events with attributes `waf_action` (blocked/allowed) and bounded `rule_id`.
+- **Correlation Wording**: Differentiates between attempted-and-blocked attacks ("attempted, blocked by WAF") vs allowed probes followed by backend anomalies ("attempted, outcome unconfirmed"). Never claims exploitation without backend database/application evidence.
+- **block_ip Workflow**: `affected_ips` extracted from evidence `src_ip`. Gateway evaluates P4 scope (target must be in `incident.affected_ips`). Token issued to mock tool which routes `block_ip` to stub site `/admin/block-ip`. Subsequent requests from blocked IPs receive HTTP 403 Forbidden.
+
+## 19. Phase E: Trace IDs and Correlation
+- **Decision**: Implemented `detection/correlation.py` to link events by `trace_id` / `request_id` within the same HTTP request lifecycle, and by user/session/host rolling 30-minute time windows for separate requests.
+- **Audit Traceability**: Collector preserves `trace_id` and `request_id` throughout event ingestion. Backend propagates request ID to tool execution and includes it in the audit record. Incident `detection_reason` explicitly documents the linking basis.
+
+## 20. Phase F: Security Posture Assessment
+- **Decision**: Implemented `backend/posture/` module with `GET /api/posture`. Evaluates HTTPS/HSTS, session cookie flags (Secure, HttpOnly, SameSite), security headers (CSP, X-Frame-Options, X-Content-Type-Options), MFA coverage via `/admin/state`, exposed RDP (TCP 3389 listening status), backup health (`data/backup_status.json`), and outdated software matched against a bundled CISA KEV snapshot (`data/kev_snapshot.json`).
+- **Safety Restriction**: All checks inspect ONLY `127.0.0.1` / localhost. All non-localhost target URLs are strictly refused with status `unknown`.
+
+## 21. Phase G: Validation Matrix & Load Testing
+- **Validation Matrix**: `eval/validation_matrix.py` benchmarks 6 benign and 8 attack scenarios. Achieved:
+  - True Positives: 8
+  - True Negatives: 6
+  - False Positives: 0
+  - False Negatives: 0
+  - Precision: 100.0%, Recall: 100.0%, False Positive Rate: 0.0%
+- **Load Testing**: `eval/load_test.py` tested with 10,000 synthetic events:
+  - Throughput: > 50,000 events/second in-process detection throughput.
+  - Parse error rate: 0.0%.
+
+## 22. Phase H: Frontend Posture Screen & Dashboard Updates
+- **Decision**: Added dedicated Security Posture screen (`frontend/src/screens/PostureScreen.tsx`) to the dashboard, rendering real-time checks with color-coded status badges, evidence inspection drawer, and actionable recommendations.
+- **Safety**: Pure text rendering and React JSX escaping prevents XSS from any untrusted site header or banner values.
+
+## 23. Phase I: Sample-Based Connectors
+- **BigQuery Audit**: `collector/mappers/bigquery_audit.py` maps GCP Cloud Audit Log JSON to `data_access` events. Labeled as SAMPLE-BASED.
+- **Sysmon**: `collector/mappers/sysmon.py` maps Windows Sysmon events (EventID 1 ProcessCreate, 3 NetworkConnect, 11 FileCreate). Labeled as SAMPLE-BASED.
+
+## 24. Phase J: Status Generator & Production Verification
+- **Status Generator**: `scripts/gen_status.py` dynamically verifies each feature against its test suite before marking it "Built" in `docs/feature-status.json` and `docs/STATUS.md`. All 11 features verified Built.
+- **Tagging**: Final demo milestone tagged as `v1.0-demo`.

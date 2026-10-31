@@ -1,0 +1,82 @@
+{
+  "generated_at": "2026-10-31T17:38:56Z",
+  "features": [
+    {
+      "id": "policy_gateway",
+      "name": "Deterministic Policy Gateway",
+      "description": "P1-P6 rules: only authorizes when all checks pass. AI only recommends.",
+      "status": "Built",
+      "test_file": "backend/tests/test_detection_rules.py"
+    },
+    {
+      "id": "audit_chain",
+      "name": "Tamper-Evident Audit Chain",
+      "description": "SHA256 hash chain; /api/audit/verify detects tampering.",
+      "status": "Built",
+      "test_file": "backend/tests/test_milestone_c.py"
+    },
+    {
+      "id": "raw_evidence_archive",
+      "name": "Raw Evidence Archive (Phase B)",
+      "description": "4KB-capped append-only archive with SHA256 checksums and retention cleanup.",
+      "status": "Built",
+      "test_file": "backend/tests/test_phase_b_archive.py"
+    },
+    {
+      "id": "risk_engine",
+      "name": "Risk Scoring Engine (Phase C)",
+      "description": "Weighted multi-signal risk engine, session hijack, password spray, mass delete detectors.",
+      "status": "Built",
+      "test_file": "backend/tests/test_phase_c_risk.py"
+    },
+    {
+      "id": "waf_adapter",
+      "name": "WAF/ModSecurity Log Adapter (Phase D)",
+      "description": "Maps ModSecurity JSON audit entries to web_request events. SAMPLE-BASED.",
+      "status": "Built",
+      "test_file": "backend/tests/test_phase_d_waf.py"
+    },
+    {
+      "id": "trace_correlation",
+      "name": "Trace ID Correlation (Phase E)",
+      "description": "Links events by trace_id/request_id or user/session/time window.",
+      "status": "Built",
+      "test_file": "backend/tests/test_phase_e_correlation.py"
+    },
+    {
+      "id": "posture",
+      "name": "Security Posture Assessment (Phase F)",
+      "description": "HTTPS/HSTS, cookie flags, security headers, MFA, RDP, backup, KEV check. Localhost only.",
+      "status": "Built",
+      "test_file": "backend/tests/test_phase_f_posture.py"
+    },
+    {
+      "id": "validation_matrix",
+      "name": "Validation Matrix (Phase G)",
+      "description": "6 benign / 8 attack scenarios; TP/FP/TN/FN, precision, recall.",
+      "status": "Built",
+      "test_file": "backend/tests/test_phase_g_validation.py"
+    },
+    {
+      "id": "sample_connectors",
+      "name": "Sample-Based Connectors (Phase I)",
+      "description": "BigQuery audit log and Sysmon event mappers. SAMPLE-BASED, not live.",
+      "status": "Built",
+      "test_file": "backend/tests/test_phase_i_connectors.py"
+    },
+    {
+      "id": "phishing_scorer",
+      "name": "Phishing Scoring",
+      "description": "Deterministic rule-based phishing scorer with verdict red/amber/green.",
+      "status": "Built",
+      "test_file": "backend/tests/test_milestone_a.py"
+    },
+    {
+      "id": "contract_extensions",
+      "name": "Contract Extensions (Phase A)",
+      "description": "block_ip action, network_connection event, optional trace/session fields, affected_ips.",
+      "status": "Built",
+      "test_file": "backend/tests/test_phase_a_extensions.py"
+    }
+  ]
+}
