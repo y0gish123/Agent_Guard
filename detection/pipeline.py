@@ -253,7 +253,7 @@ def detect_account_takeover(events: List[Event]) -> List[Incident]:
                     last_seen = max(last_seen or ev_time, ev_time)
                     break
 
-        category = Category.multi_stage if has_phishing or len(rules_fired) >= 3 else Category.account_takeover
+        category = Category.multi_stage if has_phishing else Category.account_takeover
 
         # Determine severity and confidence
         rule_count = len([r for r in rules_fired if not r.startswith("Correlation")])
@@ -625,7 +625,7 @@ def detect_data_exfiltration(events: List[Event]) -> List[Incident]:
             action = str(attrs.get("action", "")).lower()
             record_count = int(attrs.get("record_count", 0))
             num_bytes = int(attrs.get("bytes", 0))
-            if action == "export" or record_count >= 50 or num_bytes >= 50000:
+            if (action == "export" and (record_count >= 50 or num_bytes >= 50000)) or record_count >= 50 or num_bytes >= 50000:
                 d1_triggered = True
                 ev_time = _ensure_utc(ev.timestamp)
                 d1_time = ev_time
@@ -700,7 +700,13 @@ def process_events(events: List[Event]) -> List[Incident]:
     incidents: List[Incident] = []
 
     # 1. Run Account Takeover detectors (R1-R4)
-    incidents.extend(detect_account_takeover(events))
+    # Require multi-signal: R3 alone (new IP unconfirmed) does not open an incident in end-to-end processing
+    ato_incidents = detect_account_takeover(events)
+    for inc in ato_incidents:
+        reasons = [r.strip() for r in inc.detection_reason.split(";") if r.strip()]
+        if len(reasons) == 1 and reasons[0].startswith("R3:"):
+            continue
+        incidents.append(inc)
 
     # 2. Run File Burst detectors (F1-F3)
     incidents.extend(detect_file_burst(events))
