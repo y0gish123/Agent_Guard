@@ -1,0 +1,2 @@
+"""Collector log format mappers."""
+

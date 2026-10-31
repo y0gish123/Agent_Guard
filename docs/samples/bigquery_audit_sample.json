@@ -1,0 +1,47 @@
+[
+  {
+    "insertId": "bq-audit-001",
+    "timestamp": "2026-10-31T08:00:00Z",
+    "protoPayload": {
+      "authenticationInfo": {"principalEmail": "dr.priya@clinic.local"},
+      "methodName": "google.bigquery.v2.TableDataService.list",
+      "resourceName": "projects/clinic-prod/datasets/patients/tables/records",
+      "requestMetadata": {
+        "callerIp": "192.168.1.10",
+        "callerSuppliedUserAgent": "BigQuery CLI/1.0"
+      }
+    },
+    "resource": {"type": "bigquery_dataset", "labels": {"project_id": "clinic-prod"}},
+    "labels": {"bytes_processed": "4096"}
+  },
+  {
+    "insertId": "bq-audit-002",
+    "timestamp": "2026-10-31T08:05:00Z",
+    "protoPayload": {
+      "authenticationInfo": {"principalEmail": "analyst@clinic.local"},
+      "methodName": "google.bigquery.v2.JobService.insert",
+      "resourceName": "projects/clinic-prod/jobs/export_job_001",
+      "requestMetadata": {
+        "callerIp": "203.0.113.55",
+        "callerSuppliedUserAgent": "python-requests/2.28.0"
+      }
+    },
+    "resource": {"type": "bigquery_dataset", "labels": {"project_id": "clinic-prod"}},
+    "labels": {"bytes_processed": "102400"}
+  },
+  {
+    "insertId": "bq-audit-003",
+    "timestamp": "2026-10-31T08:06:00Z",
+    "protoPayload": {
+      "authenticationInfo": {"principalEmail": "unknown@attacker.com"},
+      "methodName": "google.bigquery.v2.TableService.delete",
+      "resourceName": "projects/clinic-prod/datasets/patients/tables/backups",
+      "requestMetadata": {
+        "callerIp": "203.0.113.99"
+      }
+    },
+    "resource": {"type": "bigquery_dataset", "labels": {"project_id": "clinic-prod"}},
+    "labels": {"bytes_processed": "0"}
+  }
+]
+
