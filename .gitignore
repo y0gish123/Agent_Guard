@@ -1,0 +1,40 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Databases, SQLite, and state files
+*.db
+*.sqlite
+*.sqlite3
+mock_state.json
+mock_tool.db
+mock_tool.db*
+
+# Python cache & virtualenv
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Node & Frontend build artifacts
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Logs & runtime artifacts
+*.log
+logs/
+site_logs/
+collector/offsets.json
+demo_sandbox/
+mail_drop/
+dns_logs/
+integrations/state/
+backend/ai/cache/
+.vite/
+data/raw_archive/

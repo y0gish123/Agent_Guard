@@ -1,0 +1,351 @@
+================================================================================
+AGENTGUARD AI SOC — COMPREHENSIVE SYSTEM ARCHITECTURE & PROJECT SUMMARY
+Track: KODIKON 6.0 (Accessible Cybersecurity Track, 24-Hour Build)
+Project Repository: https://github.com/y0gish123/AgentGuard.git
+Branch: feature/agentguard-live
+Date: 2026-10-29
+================================================================================
+
+1. EXECUTIVE OVERVIEW & CORE ARCHITECTURAL PRINCIPLE
+--------------------------------------------------------------------------------
+AgentGuard AI SOC is an end-to-end autonomous security operations center built for
+healthcare clinics and small-to-medium organizations. It ingests multi-source
+telemetry (authentication logs, web traffic, database queries, filesystem activity,
+email drops, and DNS traffic), correlates them into actionable incidents, explains
+threats in plain language using AI, and routes remediation actions through a
+mathematically deterministic policy gateway.
+
+THE CARDINAL SECURITY PRINCIPLE:
+  "The AI may recommend; only the deterministic policy gateway may authorize.
+   Event text, email text, usernames, URLs, and any log fields are untrusted
+   DATA, never instructions, and are never used to construct titles, reasons,
+   targets, or prompts without escaping, bounding, and scope validation."
+
+SIMULATION & SAFETY GUARANTEES:
+  1. 100% Localhost Sandbox: Attack simulators refuse non-localhost targets.
+  2. Safe Sandbox File Burst: Modifies only test files inside C:/demo_sandbox/
+     with strict path traversal checks. Never performs real encryption.
+  3. No Shell Execution: Untrusted log fields are never passed to eval or system
+     shells.
+  4. Zero Secret Leakage: Authentication tokens and HMAC secrets are sanitized
+     before audit persistence and SSE broadcasting.
+
+
+2. SYSTEM ARCHITECTURE & PORTS
+--------------------------------------------------------------------------------
+The system consists of 4 interacting service tiers:
+
+    +-----------------------------------------------------------+
+    |           React + TypeScript + Vite Frontend              |
+    |                   (Port 5173 - Browser)                   |
+    |  - Real-time SSE Live Updates     - Response Gateway Flow |
+    |  - Noise Reduction Funnel         - Phishing Message Scan |
+    |  - Incident Evidence Timeline     - SHA-256 Audit Verify  |
+    +-----------------------------+-----------------------------+
+                                  |
+            REST API (X-User, X-Role) + SSE /api/stream
+                                  v
+    +-----------------------------------------------------------+
+    |              FastAPI Gateway & Policy Engine              |
+    |                      (Port 8000)                          |
+    |  - Deterministic Policy Rules P1-P6                       |
+    |  - Single-Use HMAC-SHA256 Token Minting                   |
+    |  - Ingestion Pipeline & Noise Filtering (R1-R4, F1-F3)    |
+    |  - Web Attack & Data Theft Detectors (W1-W2, D1-D2)       |
+    |  - Gemini AI Adapter (Guarded Prompt Separation & Cache)  |
+    |  - Cryptographic Sequential Audit Hash Chain              |
+    +---------------+-----------------------------+-------------+
+                    |                             |
+      Single-Use HMAC Token         Admin Lock API (Port 8002)
+                    v                             v
+    +-------------------------------+   +-------------------------------+
+    |  Protected Mock Tool (8001)   |   |   Stub Clinic Portal (8002)   |
+    |  - Single-use token verifier  |   |  - Simulated patient portal   |
+    |  - Nonce replay deduplication |   |  - Real auth, access, data log|
+    |  - Accounts & hosts state     |   |  - HTTP 423 Locked on lock    |
+    +-------------------------------+   +-------------------------------+
+                    ^
+                    | Log Streaming & Telemetry
+    +---------------+-------------------------------------------+
+    |               Automatic Inputs & Watchers                 |
+    |  - Log Collector: Tails auth, access, data logs           |
+    |  - File Watchdog: Real-time 5s burst aggregator           |
+    |  - Mail Watcher: Ingests .eml drops, header parsing       |
+    |  - DNS Watcher: Lookalike domain heuristic analysis       |
+    |  - Telegram Bot: Long-polling triage (RED / AMBER / GREEN)|
+    +-----------------------------------------------------------+
+
+
+3. REPOSITORY DIRECTORY STRUCTURE
+--------------------------------------------------------------------------------
+AgentGuard/
+  |-- .env.example                    # All configuration keys & placeholders
+  |-- README.md                       # Quick start guide, operational modes, links
+  |-- PROJECT_SUMMARY.txt             # Comprehensive technical report (this document)
+  |-- requirements.txt                # Pinned Python dependencies verified in clean venv
+  |-- shared/
+  |     |-- contracts.py              # Frozen Pydantic v2 schemas and closed enums
+  |     |-- examples/                 # Canonical JSON examples for all payloads
+  |-- backend/
+  |     |-- main.py                   # FastAPI application, CORS, error middleware
+  |     |-- config.py                 # Pydantic Settings with live/replay toggles
+  |     |-- hooks.py                  # Pipeline execution and auto-explain triggers
+  |     |-- api/
+  |     |     |-- incidents.py        # Incident queries, detail, preview, explain
+  |     |     |-- ingest.py           # Telemetry events and candidate ingestion
+  |     |     |-- responses.py        # Approvals, HMAC token execution, portal proxy
+  |     |     |-- stream.py           # SSE live updates with 15s heartbeats
+  |     |     |-- phishing.py         # Heuristic email scanner & event generator
+  |     |     |-- audit.py            # Audit trail queries & cryptographic verification
+  |     |     |-- meta.py             # Funnel metrics and system capabilities
+  |     |     |-- demo.py             # Scenario seeding, tool state proxy, reset
+  |     |-- policy/
+  |     |     |-- rules.py            # Deterministic policy rules P1 through P6
+  |     |     |-- evaluator.py        # Multi-stage policy evaluator
+  |     |     |-- messages.py         # Human-readable consequence & reason sentences
+  |     |-- authorization/
+  |     |     |-- token_issuer.py     # HMAC-SHA256 token minting with claims
+  |     |     |-- roles.py            # Header-based RBAC (staff vs approver)
+  |     |-- audit/
+  |     |     |-- service.py          # Append-only hash chain audit logging
+  |     |     |-- hashing.py          # Canonical JSON and SHA-256 calculation
+  |     |-- ai/
+  |     |     |-- adapter.py          # Gemini Flash adapter, guarded prompts, cache
+  |     |-- incidents/
+  |     |     |-- service.py          # Candidate deduplication and query service
+  |     |     |-- demo_data.py        # Seed datasets for all 4 scenarios
+  |     |-- tests/                    # 16 test suites covering all 9 phases
+  |-- detection/
+  |     |-- pipeline.py               # Deterministic detection rules R1-R4, F1-F3, W1-W2, D1-D2
+  |     |-- phishing/
+  |           |-- scorer.py           # Lookalike domain and phishing heuristic scoring
+  |-- collector/
+  |     |-- collector.py              # Continuous tailing collector with offset tracking
+  |     |-- mapper.py                 # Log line to Event contract transformer
+  |     |-- config.yaml               # Collector path configuration
+  |-- integrations/
+  |     |-- mail_watcher.py           # Mail drop .eml poller
+  |     |-- dns_watcher.py            # DNS query log analyzer
+  |     |-- telegram_bot.py           # Telegram long-polling bot
+  |-- testbed/
+  |     |-- stub_site/main.py         # Realistic clinic patient portal on port 8002
+  |     |-- filemon/watcher.py        # Watchdog-based filesystem monitor
+  |     |-- attack/                   # Localhost-only attack simulators
+  |           |-- takeover.py         # Brute-force account takeover
+  |           |-- poison.py           # Prompt injection simulation
+  |           |-- websqli.py          # SQL injection and path traversal
+  |           |-- bulkexport.py       # Bulk patient record extraction
+  |           |-- file_burst_sim.py   # Safe sandbox ransomware simulation
+  |           |-- restore.py          # Reverts locked test files
+  |-- frontend/
+  |     |-- src/
+  |           |-- App.tsx             # Main dashboard shell & navigation
+  |           |-- api-types.ts        # TypeScript schemas generated from openapi.json
+  |           |-- api/client.ts       # Unified API client with fixture fallback
+  |           |-- hooks/useLiveUpdates.ts # SSE connection with 5s polling fallback
+  |           |-- screens/            # Overview, IncidentDetail, Phishing, Audit
+  |           |-- components/         # Header, DemoToolsModal
+  |           |-- tests/              # Vitest component test suite
+  |-- eval/
+  |     |-- e2e_demo.py               # Full 7-scenario end-to-end verification
+  |     |-- injection_experiment.py   # Guarded vs Naive prompt injection evaluation
+  |-- docs/
+  |     |-- LIVE_DEMO.md              # Demonstration script and instructions
+  |     |-- SITE_INTEGRATION.md       # Production site integration specification
+  |     |-- FRONTEND_INTEGRATION.md   # Teammate frontend integration guide
+  |     |-- decisions.md              # Architectural decision records (#1 - #11)
+  |     |-- testing-results.md        # Detailed test matrix (81 passing tests)
+  |     |-- openapi.json              # Regenerated OpenAPI 3.1 specification
+
+
+4. CORE FUNCTIONAL MODULES & HOW THEY WORK
+--------------------------------------------------------------------------------
+
+A. TELEMETRY INGESTION & NOISE REDUCTION FUNNEL
+  - Incoming raw events are ingested via POST /api/ingest/events.
+  - The pipeline filters normal background noise (e.g. single login failures,
+    routine file edits, scheduled backup tasks with process backup_agent.exe).
+  - Multi-signal correlated threats rise through the funnel:
+      Raw Events -> Filtered Noise -> Candidates -> Actionable Incidents
+  - Real-time conversion counts are exposed at GET /api/funnel.
+
+B. DETERMINISTIC DETECTION ENGINE (detection/pipeline.py)
+  - Account Takeover:
+      R1: >= 5 auth failures for same user and src_ip within 2 minutes.
+      R2: Auth success from same user and src_ip within 5 minutes of R1.
+      R3: Auth success from an IP not in user's known_ips baseline.
+      R4: Privilege change within 30 minutes of anomalous login (-> CRITICAL).
+  - File Burst & Ransomware:
+      F1: >= 100 file modifications in 60s with non-.bak extension.
+      F2: Backup tampering (e.g. vssadmin delete shadows) within 5m (-> CRITICAL).
+      F3: Ransom note file creation (README_RESTORE, etc.) cited in evidence.
+      Allowlist: Scheduled backup tasks by backup_agent.exe generate 0 incidents.
+  - Web Attack (W1/W2):
+      W1: Matches SQL injection and directory traversal regexes on URL-decoded
+          parameters. Records only rule ID and escaped snippets. Never leaks
+          attacker payload text into incident titles.
+      W2: Repeated W1 probes (>= 3 in 5 min) or >= 20 req/min to /login or /admin.
+  - Data Exfiltration (D1/D2):
+      D1: >= 50 data accesses within 2 minutes or bulk export above size limit.
+      D2: Admin login followed by D1 within 30 minutes (-> CRITICAL multi_stage).
+  - Correlation Rules:
+      Correlates events sharing the same user_id or host_id within 30 minutes,
+      tagging the incident with LINK_SAME_USER_30M or LINK_SAME_HOST_30M. A
+      preceding phishing check event upgrades category to multi_stage.
+
+C. VERIFIED POLICY GATEWAY (backend/policy/)
+  - Evaluates remediation proposals strictly without network or LLM dependencies:
+      P1: Incident Exists & Open: Closed incidents cannot be actioned.
+      P2: Valid Action Type: lock_account, isolate_host, revoke_session.
+      P3: Category Allowlists:
+          * account_takeover         -> {lock_account, revoke_session}
+          * ransomware_like_activity -> {isolate_host}
+          * web_attack               -> {isolate_host, revoke_session}
+          * data_exfiltration_suspected -> {lock_account, revoke_session}
+          * multi_stage              -> {lock_account, isolate_host, revoke_session}
+      P4: Deterministic Target Scoping:
+          * lock_account / revoke_session MUST match an entry in affected_users.
+          * isolate_host MUST match an entry in affected_hosts.
+          * Any attempt to action an unlisted target (e.g. 'ceo') is deterministically
+            BLOCKED with reason code TARGET_OUT_OF_SCOPE.
+      P5: Role Check: Staff (analysts) may preview; Approver (leads) required
+          to approve.
+      P6: Human-In-The-Loop: In-scope actions resolve to REVIEW (APPROVAL_REQUIRED).
+
+D. SINGLE-USE HMAC-SHA256 TOKEN GATEWAY
+  - Upon lead approver authorization, the gateway mints a signed execution token:
+      base64url(claims) + "." + base64url(HMAC-SHA256(secret, claims))
+  - Claims encode: iss, aud, token_id, nonce (32 hex), incident_id, action_type,
+    target_id, iat, and exp (60s TTL).
+  - Enforcement Tool Verification:
+      Checks token signature, scope matching, and active expiration window.
+      Executes an atomic SQL INSERT on the nonce into a unique-constrained table.
+      Replay attempts are instantly rejected with TOKEN_REPLAYED.
+
+E. AI EXPLANATION ENGINE (backend/ai/adapter.py)
+  - Driven by Gemini 2.5 Flash with strict Guarded Mode prompt separation:
+      All event attributes are JSON-encoded, length-capped at 300 characters,
+      and explicitly framed as UNTRUSTED DATA.
+  - Output Validation: Parses structured JSON; strips any hallucinated event IDs
+    not present in evidence; drops any recommended action targets outside the
+    affected scope.
+  - Resilient Fallback: If the LLM times out or is offline, an immediate fallback
+    explanation is returned. The system NEVER raises HTTP 500 on AI errors.
+
+F. REAL-TIME SERVER-SENT EVENTS (SSE) & LIVE UPDATES
+  - GET /api/stream publishes real-time UI events:
+      incident_created, incident_updated, response_updated, audit_appended
+  - Safe payload design: SSE messages transmit strictly IDs and types, preventing
+    XSS or injection payload leakage to client sockets.
+  - Frontend useLiveUpdates hook connects via EventSource with automatic fallback
+    to 5-second polling and visual LIVE / POLLING status pill.
+
+G. TAMPER-EVIDENT CRYPTOGRAPHIC AUDIT LEDGER (backend/audit/)
+  - Every action proposal, policy decision, approval, token issuance, and execution
+    is appended to an SHA-256 hash chain:
+      event_hash = sha256(previous_hash + canonical_json(payload))
+  - Genesis block begins with 64 zeros.
+  - Verification endpoint GET /api/audit/verify recomputes every block hash from
+    genesis and pinpoints the exact sequence number if any row was tampered with.
+
+H. CLINIC SITE ADAPTER & LOG COLLECTOR (Phase 3)
+  - testbed/stub_site/main.py: Real FastAPI clinic site (port 8002) emitting:
+      auth.log: Login failures and successes.
+      access.log: HTTP requests with query strings and paths.
+      data.log: Patient medical record query tracking.
+      Admin API: /admin/users/{user}/lock and /admin/hosts/{host}/isolate.
+  - collector/collector.py: Tails log files with persistent byte offsets and
+    POSTs mapped events to the gateway.
+  - Protected mock tool supports Portal Mode, proxying authorized executions
+    directly to the clinic site Admin API.
+
+
+5. AUTOMATED TEST SUITE & VERIFICATION RESULTS
+--------------------------------------------------------------------------------
+The project features 81 automated tests with 100% pass rate:
+  - 77 Backend Pytest Tests (across 16 test suites)
+  - 4 Frontend Vitest Component Tests
+  - 7 End-to-End Hackathon Scenarios Verified
+
+A. Test Breakdown:
+  | Suite File                                | Tests | Focus Area                         |
+  |-------------------------------------------|-------|------------------------------------|
+  | backend/tests/test_milestone_a.py         | 3     | Ingestion, deduplication, schema   |
+  | backend/tests/test_milestone_b.py         | 5     | Policy P1-P6, CEO target block     |
+  | backend/tests/test_milestone_c.py         | 6     | Token gateway, replay matrix (7 cs)|
+  | backend/tests/test_milestone_d.py         | 5     | Audit chain tamper check, fallback |
+  | backend/tests/test_milestone_e.py         | 2     | End-to-end verified response cycle |
+  | backend/tests/test_demo_additions.py      | 3     | Health, seed scenarios, tool state |
+  | backend/tests/test_examples_validation.py | 1     | Pydantic schema example validation |
+  | backend/tests/test_detection_rules.py     | 8     | Rules R1-R4, F1-F3, allowlists     |
+  | backend/tests/test_web_data_detectors.py  | 13    | Detectors W1-W2, D1-D2, allowlists |
+  | backend/tests/test_phase3_site_adapter.py | 5     | Stub site, collector, portal proxy |
+  | backend/tests/test_phase4_filemon.py      | 4     | Watchdog, burst aggregator, restore|
+  | backend/tests/test_phase5_automatic_inputs| 6     | Mail drop, DNS lookalike, Telegram |
+  | backend/tests/test_ai_adapter.py          | 9     | Guarded prompts, cache, gating     |
+  | backend/tests/test_phase6_ai_integration.py| 6    | Scorer integration, offline inject |
+  | backend/tests/test_phase8_e2e.py          | 1     | All 7 E2E hackathon scenarios      |
+  | frontend/src/tests/frontend.test.tsx      | 4     | Header, Funnel, Phishing, Live pill|
+  | TOTAL PASSING TESTS                       | 81    | 100% Pass Rate (0 failures)        |
+
+B. End-to-End Scenarios Verified (eval/e2e_demo.py):
+  1. Scenario 1 (Account Takeover): 5 failures + 1 success -> priya.rec incident ->
+     preview -> approver approval -> single-use token -> execution -> EXECUTED_OK.
+  2. Scenario 2 (CEO Protection): Action on ceo deterministically BLOCKED with
+     TARGET_OUT_OF_SCOPE.
+  3. Scenario 3 (Prompt Injection Containment): Injected string in telemetry
+     NEVER leaks into titles or reasons; guarded prompt drops out-of-scope targets.
+  4. Scenario 4 (Web Attack): SQL injection probes trigger web_attack incident.
+  5. Scenario 5 (Data Exfiltration): Bulk patient queries trigger data_exfiltration.
+  6. Scenario 6 (Ransomware Burst): Rapid file modifications trigger ransomware incident.
+  7. Scenario 7 (Audit Integrity): Recomputation of all block hashes confirms 100%
+     valid cryptographic chain from genesis.
+
+
+6. OPERATIONAL MODES & EXECUTION INSTRUCTIONS
+--------------------------------------------------------------------------------
+
+A. LIVE MODE (All Services + Live Telemetry)
+  Starts Gateway (8000), Mock Tool (8001), Stub Clinic Site (8002), and Collector.
+
+  Windows PowerShell:
+    .\scripts\live_up.ps1 -Mode guarded
+
+  macOS / Linux Bash:
+    bash scripts/live_up.sh guarded
+
+  Start Frontend:
+    cd frontend
+    npm run dev
+    # Open http://localhost:5173
+
+  Simulate Attacks (in separate terminal):
+    python testbed/attack/takeover.py       # Account takeover
+    python testbed/attack/websqli.py        # Web SQL injection
+    python testbed/attack/bulkexport.py     # Bulk data extraction
+    python testbed/attack/file_burst_sim.py # Safe sandbox ransomware
+
+B. REPLAY / OFFLINE DEMO MODE
+  Windows PowerShell:
+    .\scripts\dev_up.ps1 -Mode guarded
+    python scripts/seed_demo.py all
+
+  macOS / Linux Bash:
+    ./scripts/dev_up.sh guarded
+    python scripts/seed_demo.py all
+
+C. RUNNING THE AUTOMATED TESTS
+  Backend tests:
+    pytest -q
+
+  Frontend tests & production build:
+    cd frontend
+    npm test
+    npm run build
+
+D. SYSTEM RESET
+  PowerShell:
+    .\scripts\dev_reset.ps1
+  or via REST API:
+    curl -X POST http://localhost:8000/api/demo/reset
+================================================================================
