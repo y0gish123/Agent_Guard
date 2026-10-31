@@ -1,0 +1,8 @@
+{
+  "last_success": "2026-10-30T02:00:00Z",
+  "offline_copy": true,
+  "last_restore_test": "2026-10-01T10:00:00Z",
+  "backup_target": "clinic_db",
+  "note": "Sample backup status file. Replace with real backup monitoring output."
+}
+

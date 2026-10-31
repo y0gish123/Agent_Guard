@@ -1,0 +1,2 @@
+"""Posture module init."""
+

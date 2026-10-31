@@ -43,6 +43,10 @@ class Settings(BaseSettings):
     IMAP_PASSWORD: str = ""
     MAIL_DROP_DIR: str = "./mail_drop"
     DNS_LOG_PATH: str = "./dns_logs/dns.log"
+    BACKUP_STATUS_PATH: str = "data/backup_status.json"
+    RAW_RETENTION_DAYS: int = 30
+    EVENT_RETENTION_DAYS: int = 90
+    AUDIT_RETENTION_DAYS: int = 365
 
 
 def get_settings() -> Settings:

@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from backend.api import audit, demo, incidents, ingest, meta, phishing, responses, stream
+from backend.api import audit, demo, incidents, ingest, meta, phishing, posture, responses, stream
 from backend.config import get_settings
 from backend.db.session import get_db, init_db
 from shared.contracts import ErrorBody
@@ -123,6 +123,7 @@ def create_app() -> FastAPI:
     app.include_router(meta.router)
     app.include_router(demo.router)
     app.include_router(stream.router)
+    app.include_router(posture.router)
 
     return app
 

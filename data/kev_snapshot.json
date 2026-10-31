@@ -1,0 +1,28 @@
+{
+  "snapshot_date": "2026-10-01",
+  "source": "CISA Known Exploited Vulnerabilities Catalog (subset for demo)",
+  "note": "This is a curated subset for demonstration. Not a complete vulnerability database.",
+  "entries": [
+    {"cve_id": "CVE-2021-44228", "product": "log4j", "vendor": "Apache", "description": "Apache Log4j2 Remote Code Execution"},
+    {"cve_id": "CVE-2021-44228", "product": "log4j2", "vendor": "Apache", "description": "Apache Log4j2 Remote Code Execution"},
+    {"cve_id": "CVE-2022-22965", "product": "spring", "vendor": "VMware", "description": "Spring Framework RCE (Spring4Shell)"},
+    {"cve_id": "CVE-2021-26855", "product": "exchange", "vendor": "Microsoft", "description": "Microsoft Exchange Server SSRF"},
+    {"cve_id": "CVE-2021-34527", "product": "spooler", "vendor": "Microsoft", "description": "Windows Print Spooler RCE (PrintNightmare)"},
+    {"cve_id": "CVE-2022-1388", "product": "f5", "vendor": "F5", "description": "F5 BIG-IP Authentication Bypass"},
+    {"cve_id": "CVE-2022-30190", "product": "msdt", "vendor": "Microsoft", "description": "Microsoft Windows MSDT RCE (Follina)"},
+    {"cve_id": "CVE-2023-23397", "product": "outlook", "vendor": "Microsoft", "description": "Microsoft Outlook Elevation of Privilege"},
+    {"cve_id": "CVE-2021-21985", "product": "vcenter", "vendor": "VMware", "description": "VMware vCenter Server RCE"},
+    {"cve_id": "CVE-2022-26134", "product": "confluence", "vendor": "Atlassian", "description": "Atlassian Confluence OGNL Injection"},
+    {"cve_id": "CVE-2023-4966", "product": "netscaler", "vendor": "Citrix", "description": "Citrix Bleed - Session Token Leak"},
+    {"cve_id": "CVE-2023-20198", "product": "ios xe", "vendor": "Cisco", "description": "Cisco IOS XE Web UI Privilege Escalation"},
+    {"cve_id": "CVE-2021-40438", "product": "apache httpd", "vendor": "Apache", "description": "Apache HTTP Server SSRF"},
+    {"cve_id": "CVE-2023-27350", "product": "papercut", "vendor": "PaperCut", "description": "PaperCut MF/NG Authentication Bypass"},
+    {"cve_id": "CVE-2023-34362", "product": "moveit", "vendor": "Progress", "description": "MOVEit Transfer SQL Injection"},
+    {"cve_id": "CVE-2024-3400", "product": "pan-os", "vendor": "Palo Alto Networks", "description": "PAN-OS Command Injection"},
+    {"cve_id": "CVE-2024-21762", "product": "fortios", "vendor": "Fortinet", "description": "FortiOS SSL VPN Out-of-Bounds Write"},
+    {"cve_id": "CVE-2023-46805", "product": "ivanti", "vendor": "Ivanti", "description": "Ivanti Connect Secure Authentication Bypass"},
+    {"cve_id": "CVE-2024-6387", "product": "openssh", "vendor": "OpenSSH", "description": "OpenSSH RegreSSHion RCE (regreSSHion)"},
+    {"cve_id": "CVE-2024-50623", "product": "cleo", "vendor": "Cleo", "description": "Cleo MFT Unrestricted File Upload"}
+  ]
+}
+
